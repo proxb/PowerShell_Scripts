@@ -189,7 +189,7 @@
 
                     Try {
                         Write-Verbose "[$Computer] Performing WMI Query"
-                        $Namespace = (Get-WMIObject @WMIParams).Name
+                        $Namespace = $Namespace = (Get-WMIObject @WMIParams | Sort-Object -Descending | Select-Object -First 1).Name
                         If ($Namespace) {
                             $PropertyHash['WMINamespace'] = $Namespace
                             $WMIParams.NameSpace="root\Microsoft\SqlServer\$Namespace"
