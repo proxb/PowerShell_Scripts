@@ -175,7 +175,7 @@
                         #Get from filename to determine version
                         $servicesReg = $Registry.OpenSubKey("SYSTEM\\CurrentControlSet\\Services")
                         $serviceKey = $servicesReg.GetSubKeyNames() | Where {
-                            ($_ -match "$instance") -and ($_ -match 'MSSQL') 
+                            $_ -eq ('MSSQL${0}' -f $instance)
                         } | Select -First 1
                         $service = $servicesReg.OpenSubKey($serviceKey).GetValue('ImagePath')
                         $file = $service -replace '^.*(\w:\\.*\\sqlservr.exe).*','$1'
