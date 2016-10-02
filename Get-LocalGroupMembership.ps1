@@ -147,15 +147,23 @@
                     [System.DirectoryServices.DirectoryEntry]$LocalGroup
                 )
                 # Invoke the Members method and convert to an array of member objects.
-                $Members= @($LocalGroup.psbase.Invoke("Members"))
-                $Counter++
+                #Change3 comment from web page by Craig Dempsey to fixe Powershell 5.0 issue
+				#$Members= @($LocalGroup.psbase.Invoke("Members"))
+                $Members= @($LocalGroup.psbase.Invoke("Members")) | foreach{([System.DirectoryServices.DirectoryEntry]$_)}
+				$Counter++
                 ForEach ($Member In $Members) {                
                     Try {
-                        $Name = $Member.GetType().InvokeMember("Name", 'GetProperty', $Null, $Member, $Null)
-                        $Path = $Member.GetType().InvokeMember("ADsPath", 'GetProperty', $Null, $Member, $Null)
-                        # Check if this member is a group.
-                        $isGroup = ($Member.GetType().InvokeMember("Class", 'GetProperty', $Null, $Member, $Null) -eq "group")
-                        
+						#Change3
+                        #$Name = $Member.GetType().InvokeMember("Name", 'GetProperty', $Null, $Member, $Null)
+                        #$Path = $Member.GetType().InvokeMember("ADsPath", 'GetProperty', $Null, $Member, $Null)
+                        $Name = $Member.InvokeGet("Name")
+						$Path = $Member.InvokeGet("AdsPath")
+
+						# Check if this member is a group.
+                        #Change3
+						#$isGroup = ($Member.GetType().InvokeMember("Class", 'GetProperty', $Null, $Member, $Null) -eq "group")
+                        $isGroup = ($Member.InvokeGet("Class") -eq "group")
+
 						#region Change1 by Kensel
 						#Remove the domain from the computername to fix the type comparison when supplied with FQDN
 						IF ($Computer.Contains('.')){
