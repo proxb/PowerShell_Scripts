@@ -15,6 +15,7 @@
 
     .Parameter MessageType
         The type of message. This value determines what type of icon to display. Valid values are
+        None, Info, Warning and Error. Default is Info.
 
     .Parameter SysTrayIcon
         The path to a file that you will use as the system tray icon. Default is the PowerShell ISE icon.
